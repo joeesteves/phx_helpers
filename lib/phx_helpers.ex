@@ -36,11 +36,11 @@ defmodule PhxHelpers do
   end
 
   def dt(msg) do
-    Gettext.dgettext(get_config(gettext_module), "labels", "#{msg}")
+    Gettext.dgettext(get_config(:gettext_module), "labels", "#{msg}")
   end
 
   def tlabel(form, attr_key, _opt \\ []) do
-    label(form, attr_key, Gettext.dgettext(get_config(gettext_module), "labels", Atom.to_string(attr_key)))
+    label(form, attr_key, Gettext.dgettext(get_config(:gettext_module), "labels", Atom.to_string(attr_key)))
   end
 
   @format_options [
