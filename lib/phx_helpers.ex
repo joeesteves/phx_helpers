@@ -27,6 +27,7 @@ defmodule PhxHelpers do
     String.match?(path, regex)
   end
 
+  @spec maybe_text(String.t, boolean()) :: String.t
   def maybe_text(text, true), do: text
   def maybe_text(_, _), do: ""
 
