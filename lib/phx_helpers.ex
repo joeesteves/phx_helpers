@@ -6,26 +6,19 @@ defmodule PhxHelpers do
   import Phoenix.HTML.Form, only: [label: 3]
   import Phoenix.HTML, only: [sigil_E: 2]
 
-  defp shared_view_module do
-    case Application.get_env(:phx_helpers, :shared_view_module) do
-      nil -> raise RuntimeError, message: "Missing config :phx_helpers, :shared_view_module"
-      mod -> mod
-    end
-  end
-
-  defp gettext_module do
-    case Application.get_env(:phx_helpers, :gettext_module) do
-      nil -> raise RuntimeError, message: "Missing config :phx_helpers, :gettext_module"
+  defp get_config(key) do
+    case Application.get_config(:phx_helpers, key) do
+      nil -> raise RuntimeError, message: "Missing config :phx_helpers, #{key}"
       mod -> mod
     end
   end
 
   def render_shared(path, do: shared_content) do
-    Phoenix.View.render(shared_view_module(), path, shared_content: shared_content)
+    Phoenix.View.render(get_config(:shared_view_module), path, shared_content: shared_content)
   end
 
   def render_shared(path, assigns, do: shared_content) do
-    Phoenix.View.render(shared_view_module(), path, [shared_content: shared_content] ++ assigns)
+    Phoenix.View.render(get_config(:shared_view_module), path, [shared_content: shared_content] ++ assigns)
   end
 
   def current_path_match?(conn, regex) do
@@ -38,15 +31,15 @@ defmodule PhxHelpers do
   def maybe_text(_, _), do: ""
 
   def t(msg) do
-    Gettext.gettext(gettext_module(), msg)
+    Gettext.gettext(get_config(:gettext_module), msg)
   end
 
   def dt(msg) do
-    Gettext.dgettext(gettext_module(), "labels", "#{msg}")
+    Gettext.dgettext(get_config(gettext_module), "labels", "#{msg}")
   end
 
   def tlabel(form, attr_key, _opt \\ []) do
-    label(form, attr_key, Gettext.dgettext(gettext_module(), "labels", Atom.to_string(attr_key)))
+    label(form, attr_key, Gettext.dgettext(get_config(gettext_module), "labels", Atom.to_string(attr_key)))
   end
 
   @format_options [
@@ -80,5 +73,9 @@ defmodule PhxHelpers do
 
   def format_time(time) do
     Timex.format!(time, "%d-%m", :strftime)
+  end
+
+  def to_select(enum) do
+    Enum.map(enum, &{&1.name, &1.id})
   end
 end
