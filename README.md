@@ -1,21 +1,26 @@
 # PhxHelpers
 
-**TODO: Add description**
+Set of commonly used funcitons for phoenix projects
 
 ## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `phx_helpers` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:phx_helpers, "~> 0.1.0"}
+    {:phx_helpers, git: git@github.com:ponyesteves/phx_helpers.git}
   ]
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/phx_helpers](https://hexdocs.pm/phx_helpers).
+## Usage
+
+### Config `(config/confix.exs)`
+
+```elixir
+# required for I18n related functions
+config :phx_helpers, :gettext_module, MateWeb.Gettext
+
+# required for render_shared
+config :phx_helpers, :shared_view_module, MateWeb.SharedView
+```
 
