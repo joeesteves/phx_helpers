@@ -7,7 +7,7 @@ defmodule PhxHelpers do
   import Phoenix.HTML, only: [sigil_E: 2]
 
   defp get_config(key) do
-    case Application.get_config(:phx_helpers, key) do
+    case Application.get_env(:phx_helpers, key) do
       nil -> raise RuntimeError, message: "Missing config :phx_helpers, #{key}"
       mod -> mod
     end
