@@ -3,7 +3,7 @@ defmodule PhxHelpers do
   Documentation for `PhxHelpers`.
   """
 
-  import Phoenix.HTML.Form, only: [label: 3]
+  import Phoenix.HTML.Form, only: [label: 4]
   import Phoenix.HTML, only: [sigil_E: 2]
 
   defp get_config(key) do
@@ -39,8 +39,13 @@ defmodule PhxHelpers do
     Gettext.dgettext(get_config(:gettext_module), "labels", "#{msg}")
   end
 
-  def tlabel(form, attr_key, _opt \\ []) do
-    label(form, attr_key, Gettext.dgettext(get_config(:gettext_module), "labels", Atom.to_string(attr_key)))
+  def tlabel(form, attr_key, opts \\ []) do
+    label(
+      form,
+      attr_key,
+      Gettext.dgettext(get_config(:gettext_module), "labels", Atom.to_string(attr_key)),
+      opts
+      )
   end
 
   @format_options [
