@@ -4,7 +4,7 @@ defmodule PhxHelpers.MixProject do
   def project do
     [
       app: :phx_helpers,
-      version: "0.1.0",
+      version: "1.6.0",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       deps: deps()
@@ -21,9 +21,9 @@ defmodule PhxHelpers.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:phoenix, "~> 1.5"},
-      {:phoenix_html, "~> 2.11"},
-      {:gettext, "~> 0.11"},
+      {:phoenix, "~> 1.6"},
+      {:phoenix_html, "~> 3.0"},
+      {:gettext, "~> 0.18"},
       {:timex, "~> 3.6"},
       {:number, "~> 1.0"}
     ]
