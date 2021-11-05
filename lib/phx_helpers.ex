@@ -13,12 +13,17 @@ defmodule PhxHelpers do
     end
   end
 
+
   def render_shared(path, do: shared_content) do
     Phoenix.View.render(get_config(:shared_view_module), path, shared_content: shared_content)
   end
 
   def render_shared(path, assigns, do: shared_content) do
     Phoenix.View.render(get_config(:shared_view_module), path, [shared_content: shared_content] ++ assigns)
+  end
+
+  def render_shared(path, assigns) do
+    Phoenix.View.render(get_config(:shared_view_module), path, [shared_content: nil] ++ assigns)
   end
 
   def current_path_match?(conn, regex) do
