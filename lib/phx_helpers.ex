@@ -13,16 +13,20 @@ defmodule PhxHelpers do
     end
   end
 
-  def render_shared(path, do: content) do
-    Phoenix.View.render(get_config(:shared_view_module), path, content: content)
+  def render_shared(path, assigns, content \\ [])
+
+  def render_shared(path, assigns, content) when is_list(assigns) do
+    render_shared_on(get_config(:shared_view_module), path, assigns, content)
   end
 
-  def render_shared(path, assigns, do: content) do
-    Phoenix.View.render(get_config(:shared_view_module), path, [content: content] ++ assigns)
+  def render_shared_on(view_module, path, assigns, content \\ [])
+
+  def render_shared_on(view_module, path, assigns, content) when is_map(assigns) do
+    render_shared_on(view_module, path, Enum.into(assigns, []), content)
   end
 
-  def render_shared(path, assigns) do
-    Phoenix.View.render(get_config(:shared_view_module), path, [content: nil] ++ assigns)
+  def render_shared_on(view_module, path, assigns, content) when is_list(assigns) do
+    Phoenix.View.render(view_module, path, assigns ++ [content: content[:do]])
   end
 
   def current_path_match?(conn, regex) do
@@ -31,7 +35,7 @@ defmodule PhxHelpers do
     String.match?(path, regex)
   end
 
-  @spec maybe_text(String.t, boolean()) :: String.t
+  @spec maybe_text(String.t(), boolean()) :: String.t()
   def maybe_text(text, true), do: text
   def maybe_text(_, _), do: ""
 
@@ -49,7 +53,7 @@ defmodule PhxHelpers do
       attr_key,
       Gettext.dgettext(get_config(:gettext_module), "labels", Atom.to_string(attr_key)),
       opts
-      )
+    )
   end
 
   @format_options [
