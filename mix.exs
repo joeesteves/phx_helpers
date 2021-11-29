@@ -23,7 +23,7 @@ defmodule PhxHelpers.MixProject do
     [
       {:phoenix, "~> 1.6"},
       {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_view, "~> 0.16.0"},
+      {:phoenix_live_view, "~> 0.16"},
       {:gettext, "~> 0.18"},
       {:timex, "~> 3.6"},
       {:number, "~> 1.0"}
