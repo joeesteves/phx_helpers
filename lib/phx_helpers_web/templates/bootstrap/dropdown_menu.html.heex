@@ -2,9 +2,11 @@
   <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"><i class="fas fa-cogs"></i></button>
   <ul class="dropdown-menu">
     <%= for item <- @items do %>
-      <li>
-       <%= link item.title, Keyword.merge(Enum.into(item, []), class: "dropdown-item") %>
-      </li>
+      <%= unless Map.get(item, :hide?, false) do %>
+        <li>
+         <%= link item.title, Keyword.merge(Enum.into(item, []), class: "dropdown-item") %>
+        </li>
+      <% end %>
     <% end %>
     <%= @content %>
   </ul>
