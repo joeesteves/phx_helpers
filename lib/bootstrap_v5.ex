@@ -23,11 +23,15 @@ defmodule PhxHelpers.BootstrapV5 do
       ~H"""
       <div class="mb-3">
         <%= label f, label_name, class: "form-label" %>
-        <%= apply(Phoenix.HTML.Form, original_fx, [f, field, [required: true, class: "form-control"]]) %>
+        <%= apply(Phoenix.HTML.Form, original_fx, [f, field, [required: required(assigns), class: "form-control"]]) %>
         <%= b5_error_tag f, :name %>
       </div>
       """
     end
+  end
+
+  defp required(assigns) do
+    assigns[:required] || false
   end
 
   def b5_checkbox(%{form: f, label: label_name, field: field} = assigns) do
@@ -39,11 +43,11 @@ defmodule PhxHelpers.BootstrapV5 do
     """
   end
 
-  def b5_select(%{form: f, label: label_name, field: field } = assigns) do
+  def b5_select(%{form: f, label: label_name, field: field, options: options } = assigns) do
     ~H"""
     <div class="mb-3 ">
       <%= label f, label_name, class: "form-label" %>
-      <%= select f, field, assigns[:opts] %>
+      <%= select f, field, options, class: "form-select" %>
     </div>
     """
   end
@@ -67,8 +71,8 @@ defmodule PhxHelpers.BootstrapV5 do
 
   def b5_error_tag(form, field) do
     Enum.map(Keyword.get_values(form.errors, field), fn error ->
-      content_tag(:span, b5_translate_error(error),
-        class: "invalid-feedback",
+      content_tag(:div, b5_translate_error(error),
+        class: "invalid-feedback d-block",
         phx_feedback_for: input_name(form, field)
       )
     end)
