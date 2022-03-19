@@ -23,11 +23,32 @@ defmodule PhxHelpers.BootstrapV5 do
       ~H"""
       <div class="mb-3">
         <%= label f, label_name, class: "form-label" %>
-        <%= apply(Phoenix.HTML.Form, original_fx, [f, field, [required: required(assigns), class: "form-control"]]) %>
-        <%= b5_error_tag f, :name %>
+        <%= apply(Phoenix.HTML.Form, original_fx, [f, field, build_opts(f, field, assigns, "form-control")]) %>
+        <%= b5_error_tag f, field %>
       </div>
       """
     end
+  end
+
+  defp build_opts(form, field, assigns, default_field_class) do
+    extra_opts = Map.drop(assigns, [:form, :field, :class, :required]) |> Enum.into([])
+
+    [required: required(assigns), class: form_control_class(default_field_class, form, field, assigns)]
+    |> Keyword.merge(extra_opts)
+    |> IO.inspect(label: "KEY")
+  end
+
+  defp form_control_class(default_class, form, field, assigns) do
+    valid_class =
+      case form.source.action do
+        nil ->
+          ""
+
+        _ ->
+          (Keyword.get_values(form.errors, field) |> Enum.any?() && "is-invalid") || "is-valid"
+      end
+
+    ~s"#{default_class} #{valid_class} #{assigns[:class]}"
   end
 
   defp required(assigns) do
@@ -43,11 +64,12 @@ defmodule PhxHelpers.BootstrapV5 do
     """
   end
 
-  def b5_select(%{form: f, label: label_name, field: field, options: options } = assigns) do
+  def b5_select(%{form: f, label: label_name, field: field, options: options} = assigns) do
     ~H"""
     <div class="mb-3 ">
       <%= label f, label_name, class: "form-label" %>
-      <%= select f, field, options, class: "form-select" %>
+      <%= select f, field, options, class: form_control_class("form-select", f, field, assigns)  %>
+      <%= b5_error_tag f, field %>
     </div>
     """
   end
@@ -60,7 +82,9 @@ defmodule PhxHelpers.BootstrapV5 do
     """
   end
 
-  def b5_submit_cancel(%{label: label_name, cancel_label: cancel_label, cancel_path: cancel_path} = assigns) do
+  def b5_submit_cancel(
+        %{label: label_name, cancel_label: cancel_label, cancel_path: cancel_path} = assigns
+      ) do
     ~H"""
     <div class="mt-3">
       <%= submit label_name, class: "btn btn-primary me-3" %>
