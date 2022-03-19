@@ -16,6 +16,7 @@ defmodule PhxHelpers do
   def render_shared(path, assigns, content \\ [])
 
   def render_shared(path, assigns, content) when is_list(assigns) do
+    content = Enum.any?(content) && content || [do: assigns[:do]]
     render_shared_on(get_config(:shared_view_module), path, assigns, content)
   end
 
