@@ -8,6 +8,7 @@ defmodule PhxHelpers.BootstrapV5 do
     maps every field_input from HTML.Form
   """
   @fields ~w(
+    date_input
     email_input
     password_input
     telephone_input
@@ -21,38 +22,13 @@ defmodule PhxHelpers.BootstrapV5 do
       original_fx = unquote(src_name)
 
       ~H"""
-      <div class="mb-3">
+      <div class={["mb-3", assigns[:div_class]]}>
         <%= label f, label_name, class: "form-label" %>
         <%= apply(Phoenix.HTML.Form, original_fx, [f, field, build_opts(f, field, assigns, "form-control")]) %>
         <%= b5_error_tag f, field %>
       </div>
       """
     end
-  end
-
-  defp build_opts(form, field, assigns, default_field_class) do
-    extra_opts = Map.drop(assigns, [:form, :field, :class, :required]) |> Enum.into([])
-
-    [required: required(assigns), class: form_control_class(default_field_class, form, field, assigns)]
-    |> Keyword.merge(extra_opts)
-    |> IO.inspect(label: "KEY")
-  end
-
-  defp form_control_class(default_class, form, field, assigns) do
-    valid_class =
-      case form.source.action do
-        nil ->
-          ""
-
-        _ ->
-          (Keyword.get_values(form.errors, field) |> Enum.any?() && "is-invalid") || "is-valid"
-      end
-
-    ~s"#{default_class} #{valid_class} #{assigns[:class]}"
-  end
-
-  defp required(assigns) do
-    assigns[:required] || false
   end
 
   def b5_checkbox(%{form: f, label: label_name, field: field} = assigns) do
@@ -77,7 +53,7 @@ defmodule PhxHelpers.BootstrapV5 do
   def b5_submit(%{label: label_name} = assigns) do
     ~H"""
     <div class="mt-3">
-      <%= submit label_name, class: "btn btn-primary" %>
+      <%= submit label_name, class: "btn btn-primary me-3 #{assigns[:class]}" %>
     </div>
     """
   end
@@ -87,10 +63,32 @@ defmodule PhxHelpers.BootstrapV5 do
       ) do
     ~H"""
     <div class="mt-3">
-      <%= submit label_name, class: "btn btn-primary me-3" %>
+      <%= submit label_name, class: "btn btn-primary me-3 #{assigns[:class]}" %>
       <%= link cancel_label, to: cancel_path %>
     </div>
     """
+  end
+
+  defp build_opts(form, field, assigns, default_field_class) do
+    extra_opts = Map.drop(assigns, [:form, :field, :class, :required]) |> Enum.into([])
+
+    [required: required(assigns), class: form_control_class(default_field_class, form, field, assigns)]
+    |> Keyword.merge(extra_opts)
+  end
+
+  defp form_control_class(default_class, form, field, assigns) do
+    valid_class =
+      case form do
+        %{source: %Ecto.Changeset{action: action}} when action in ~w(insert update)a ->
+          (Keyword.get_values(form.errors, field) |> Enum.any?() && "is-invalid") || "is-valid"
+        _ -> ""
+      end
+
+    ~s"#{default_class} #{valid_class} #{assigns[:class]}"
+  end
+
+  defp required(assigns) do
+    assigns[:required] || false
   end
 
   def b5_error_tag(form, field) do
