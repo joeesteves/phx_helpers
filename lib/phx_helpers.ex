@@ -90,6 +90,10 @@ defmodule PhxHelpers do
     Timex.format!(time, "%d-%m", :strftime)
   end
 
+  def format_date(date, :short) do
+    Timex.format!(date, "%d-%m-%y", :strftime)
+  end
+
   def to_select(enum) do
     Enum.map(enum, &{&1.name, &1.id})
   end
