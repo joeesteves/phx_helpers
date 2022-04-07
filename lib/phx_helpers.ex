@@ -13,6 +13,10 @@ defmodule PhxHelpers do
     end
   end
 
+  def render_shared(path) do
+    render_shared_on(get_config(:shared_view_module), path, [])
+  end
+
   def render_shared(path, assigns, content \\ [])
 
   def render_shared(path, assigns, content) when is_list(assigns) do
